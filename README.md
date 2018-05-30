@@ -103,14 +103,19 @@ df.area
 ```
 
 ## Working with datasets (Pt. 1)
-Place the folders `data` and `movie` in the same folder as your jupyter notebook, they contain the datasets needed for the workshop.
+Place the folders `data` and `movie` in the same folder as your jupyter notebook, they contain the datasets needed for the workshop.  
+
+For the first part you will learn to merge datasets and make some basic manipulations and calculations.
 **read_csv(with proper labels)**  
+With a properly defined csv file, importing csv files is as simple as calling `read_csv(<filename>)`  
+You can also output csv files from `DataFrame`s by simply calling `DataFrame.to_csv(<filename>)`
 ```
 df1 = pd.read_csv('data/users_with_age_data.csv')
 df2 = pd.read_csv('data/users_with_gender_data.csv')
 ```
 
 **Merging DataFrames**  
+Having multiple different `DataFrame`s isn't very helpful for data comparison or calculations. Here, you will merge the `DataFrame`s together to start making sense of the datasets. 
 ```
 # Left merge using the 'user_id' column as keys (this only retains rows which exist in df1)
 df1.merge(df2, on='user_id', how='left')
@@ -120,6 +125,8 @@ users = df1.merge(df2, on="user_id", how="outer")
 ```
 
 **Manipulating DataFrames**  
+You will sometimes encounter datasets with gaps in the data. In this case, some users do not have 'gender' or 'age' filled in.  
+In certain cases you will choose to leave them as None. But here, you will fill them with default values using the `fillna()` function.
 ```
 # Fills the empty values in 'gender' with 'F'
 users['gender'] = users['gender'].fillna("'F'")
@@ -129,6 +136,7 @@ users['age'] = users['age'].fillna(users['age'].mean())
 ```
 
 **Grouping and calculations**  
+A common thing to do when evaluating datasets is to group the data by certain criteria and making calculations based off that. This is possible by using the `groupby()` function to group the data by certain columns and then evaluating the grouped data.
 ```
 # Groups rows by 'gender' column
 grouped = users.groupby('gender')
@@ -141,13 +149,21 @@ grouped['age'].mean()
 ```
 
 **Adding Columns**  
+You will often run into cases where certain derived values are used multiple times. It is easy to add new columns to `DataFrame`s.
 ```
 # Adds a new column based on function applied to another column
-users['minor'] = users['age'].apply(lambdax: True if x < 18 else False)
+users['minor'] = users['age'].apply(lambda x: True if x < 18 else False)
 ```
 
 ## Working with datasets (Pt. 2)
+Now that you know how to work with `DataFrame`s let's move to a bigger dataset.  
+
+For this example, you will work on the given dataset of movie ratings to determine a few things:
+* What are the favorite movies of males vs females
+* What are the movies with the most discrepancy between reviews
+
 **read_csv(without proper labels)**  
+The given datasets do not come with labels. In such cases, you should determine the labels through the source if possible, or make assumptions if not.  
 users.dat: dataset containing info of users who added 1 or more ratings  
 movies.dat: dataset containing name and id of movies  
 ratings.dat: dataset containing all ratings given (linked by `user_id` and `movie_id`)  
@@ -159,12 +175,15 @@ movies = pd.read_csv('movie/movies.dat', delimiter='::', names=['movie_id','titl
 ```
 
 **Merging DataFrames**  
+As the `merge()` function returns a `DataFrame` you are able to chain merges together as long as you can merge on a key.
 ```
 # joins the all the dataframes
 merged = users.merge(ratings, on="user_id").merge(movies, on="movie_id")
 ```
 
 **Sort by number of ratings**  
+There are times where the amount of data is too low to be meaningful. In such cases, it is better to set a threshold and remove data that you would deem inconsequential.  
+Here, you will group the movie ratings together by title and make some judgements on the threshold.
 ```
 # Group ratings by title and aggregate the values, then sort the values in descending order
 sorted_movies = merged.groupby("title").count().sort_values(by='rating', ascending=False)
@@ -174,6 +193,8 @@ sorted_movies.head(5)
 ```
 
 **Applying query to DataFrame**  
+We will deem movies with less than 250 ratings to be inactive and would therefore not give good results.  
+You can easily filter `DataFrame`s with the `query()` function or make use of the [] filter functionality of `Series` to filter out offending data.
 ```
 # list moviess with >= 250 ratings
 active_titles = sorted_movies.query('rating >= 250')
@@ -181,12 +202,17 @@ active_titles = sorted_movies.query('rating >= 250')
 ```
 
 **Ungrouping DataFrames**  
+Grouped `DataFrame`s are useful for determining values from groups but not so for evaluating other information.  
+It is useful to ungroup the data again for further evaluation.  
+(You can also ungroup with the `reset_index()` function, but it will not be covered here.
 ```
 # Filter original DataFrame with index of filtered DataFrame 
 ungrouped_sorted_movies = merged[merged['title'].isin(active_titles.index)]
 ```
 
-**Grouping by multiple columns calculating mean values**  
+**Grouping by multiple columns and calculating mean values**  
+To calculate the mean of the ratings separated by gender and title, we will group the `DataFrame` by more than one columns.  
+Once the `DataFrame` is grouped, you can call `agg()` to make aggregated values of the columns.
 ```
 # Groups ratings by 'gender' and title'
 separated_rating = ungrouped_sorted_movies.groupby(['gender','title'], as_index=False)
@@ -196,6 +222,7 @@ separated_rating = separated_rating.agg({'rating': np.mean})
 ```
 
 **Getting sorted, grouped data**  
+To get the favorite movies of both genders, we can either filter the genders and get the top movies of the filtered `DataFrame`s, or we can make use of a feature of grouped `DataFrame`s to get the top movies of each gender.
 ```
 # If you do not group the data, it will only return the 1st 3 items
 separated_rating.sort_values(['gender','rating'],ascending=False).head(3)
@@ -205,18 +232,26 @@ separated_rating.sort_values(['gender','rating'],ascending=False).groupby('gende
 ```
 
 **Pivoting tables**  
+Sometimes, you would need to use the rows of a `DataFrame` as columns to calculate some values.  
+In order to calculate the difference in rating between genders of a movie, you would need to be able to access the 'M' and 'F' rows of data as columns.  
+The `pivot()` functions allows you to use all the values of a column as the columns of a new pivoted `DataFrame`.
 ```
 # Pivots ratings table to use values of 'title' as index and values of 'gender' as columns
 pivoted_ratings = separated_rating.pivot('title', 'gender')
 ```
 
 **Applying function to all rows of a DataFrame**  
+`apply()` allows you to apply a function to each row or column of a `DataFrame`.  
+Whether the function is applied to the row or column of the `DataFrame` is determined by the `axis` parameter. (0 for col, 1 for row)
 ```
 # Applies 'F' - 'M' to each row and sorts the result
 pivoted_ratings['rating'].apply(lambda x: x['F'] - x['M'], axis=1).sort_values()
 ```
 
 **Calculating standard deviation**  
+Standard deviation is a common value to look for to see how controversial a thing is.  
+This higher the deviation, the more controversial it is.  
+`std()` is a helper aggregator functions available in Pandas that calculates and returns the standard deviation value of a `Series`
 ```
 # Regroups movies and calculates the standard deviation of each title
 ratings_std = ungrouped_sorted_movies.groupby('title')['rating'].std()
@@ -224,3 +259,9 @@ ratings_std = ungrouped_sorted_movies.groupby('title')['rating'].std()
 # Using nlargest instead of sorting the values and calling head(n) to get top n values
 ratings_std.nlargest(5)
 ```
+
+# End
+This marks the end of the workshop.  
+I hope this gave you a good beginner tour of Pandas and manipulation of `DataFrame`s to arrive at meaningful values.  
+
+Feel free to reach out to me at [pengyu@theartling.com](mailto:pengyu@theartling.com)
