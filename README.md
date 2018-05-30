@@ -1,9 +1,9 @@
-## Beginners' introduction to Pandas - Pycon APAC 2018
-# Recommended installation
+# Beginners' introduction to Pandas - Pycon APAC 2018
+## Recommended installation
 The Anaconda distribution package is one of the most popular packages for data science and contains all of the packages you will need for this workshop and for further experimentation and usage.  
 The distribution package can be downloaded here (600~mb): `https://www.anaconda.com/download/`  
 (You can also get the distribution package from me as the file is rather big)
-# Advanced installation
+## Advanced installation
 For advanced users who wish to install only the necessary modules, these are the modules needed for this workshop.  
 * Python 3.6
 * Jupyter notebook `pip3 install jupyter`
