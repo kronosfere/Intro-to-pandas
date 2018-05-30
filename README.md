@@ -264,6 +264,6 @@ ratings_std.nlargest(5)
 
 # End
 This marks the end of the workshop.  
-I hope this gave you a good beginner tour of Pandas and manipulation of `DataFrame`s to arrive at meaningful values.  
+I hope this gave you a good beginner's tour of Pandas and manipulation of `DataFrame`s to arrive at meaningful values.  
 
 Feel free to reach out to me at [pengyu@theartling.com](mailto:pengyu@theartling.com)
