@@ -2,11 +2,11 @@
 
 ## Prerequisites
 # Recommended installation
-The Anaconda distribution package is one of the most popular packages for data science and contains all of the packages you will need for this workshop and for further experimentation and usage. 
-The distribution package can be downloaded here (600~mb): `https://www.anaconda.com/download/`
+The Anaconda distribution package is one of the most popular packages for data science and contains all of the packages you will need for this workshop and for further experimentation and usage.  
+The distribution package can be downloaded here (600~mb): `https://www.anaconda.com/download/`  
 (You can also get the distribution package from me as the file is rather big)
 # Advanced installation
-For advanced users who wish to install only the necessary modules, these are the modules needed for this workshop.
+For advanced users who wish to install only the necessary modules, these are the modules needed for this workshop.  
 * Python 3.6
 * Jupyter notebook `pip3 install jupyter`
 * Pandas >= 0.20.3 `pip3 install pandas`
@@ -17,7 +17,7 @@ For advanced users who wish to install only the necessary modules, these are the
 Start up jupyter notebook in a clean folder:  
 `$ jupyter notebook`
 
-Create a new 'Python 3' notebook:
+Create a new 'Python 3' notebook:  
 ![jupyter notebook instruction](https://i.imgur.com/FSV3X5V.png)
 
 Import the libraries you will use for this workshop in your current notebook environment:  
@@ -32,7 +32,7 @@ import numpy as np
 # [Series](https://pandas.pydata.org/pandas-docs/stable/generated/pandas.Series.html)
 A `Series` is a **one-demensional ndarray with axis labels**  
 Values within a `Series` object can be accessed by index: `a[0]`  
-You can pass in `index` to create your own index
+You can pass in `index` to create your own index  
 
 Ways to create `Series` objects:
 ```
@@ -82,7 +82,9 @@ s3.max()
 ```
 
 # [DataFrame](https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html#pandas.DataFrame)
-A `DataFrame` is a **2-dimensional table with labeled axes**. Acts like a dict-like container for `Series` objects.  
+A `DataFrame` is a **2-dimensional table with labeled axes**.  
+Acts like a dict-like container for `Series` objects.  
+
 Creating `DataFrame`:
 ```
  data = {
@@ -103,13 +105,13 @@ df.area
 
 ## Working with datasets (Pt. 1)
 Place the folders `data` and `movie` in the same folder as your jupyter notebook, they contain the datasets needed for the workshop.
-**read_csv(with proper labels)**
+**read_csv(with proper labels)**  
 ```
 df1 = pd.read_csv('data/users_with_age_data.csv')
 df2 = pd.read_csv('data/users_with_gender_data.csv')
 ```
 
-**Merging DataFrames**
+**Merging DataFrames**  
 ```
 # Left merge using the 'user_id' column as keys (this only retains rows which exist in df1)
 df1.merge(df2, on='user_id', how='left')
@@ -118,7 +120,7 @@ df1.merge(df2, on='user_id', how='left')
 users = df1.merge(df2, on="user_id", how="outer")
 ```
 
-**Manipulating DataFrames**
+**Manipulating DataFrames**  
 ```
 # Fills the empty values in 'gender' with 'F'
 users['gender'] = users['gender'].fillna("'F'")
@@ -127,7 +129,7 @@ users['gender'] = users['gender'].fillna("'F'")
 users['age'] = users['age'].fillna(users['age'].mean())
 ```
 
-**Grouping and calculations**
+**Grouping and calculations**  
 ```
 # Groups rows by 'gender' column
 grouped = users.groupby('gender')
@@ -139,14 +141,14 @@ grouped.count()
 grouped['age'].mean()
 ```
 
-**Adding Columns**
+**Adding Columns**  
 ```
 # Adds a new column based on function applied to another column
 users['minor'] = users['age'].apply(lambdax: True if x < 18 else False)
 ```
 
 ## Working with datasets (Pt. 2)
-**read_csv(without proper labels)**
+**read_csv(without proper labels)**  
 users.dat: dataset containing info of users who added 1 or more ratings  
 movies.dat: dataset containing name and id of movies  
 ratings.dat: dataset containing all ratings given (linked by `user_id` and `movie_id`)  
@@ -157,13 +159,13 @@ ratings = pd.read_csv('movie/ratings.dat', delimiter='::', names=['user_id','mov
 movies = pd.read_csv('movie/movies.dat', delimiter='::', names=['movie_id','title','genre'], engine='python')
 ```
 
-**Merging DataFrames**
+**Merging DataFrames**  
 ```
 # joins the all the dataframes
 merged = users.merge(ratings, on="user_id").merge(movies, on="movie_id")
 ```
 
-**Sort by number of ratings**
+**Sort by number of ratings**  
 ```
 # Group ratings by title and aggregate the values, then sort the values in descending order
 sorted_movies = merged.groupby("title").count().sort_values(by='rating', ascending=False)
@@ -172,20 +174,20 @@ sorted_movies = merged.groupby("title").count().sort_values(by='rating', ascendi
 sorted_movies.head(5)
 ```
 
-**Applying query to DataFrame**
+**Applying query to DataFrame**  
 ```
 # list moviess with >= 250 ratings
 active_titles = sorted_movies.query('rating >= 250')
 # active_titles = top_movies[top_movies['rating'] >= 250]
 ```
 
-**Ungrouping DataFrames**
+**Ungrouping DataFrames**  
 ```
 # Filter original DataFrame with index of filtered DataFrame 
 ungrouped_sorted_movies = merged[merged['title'].isin(active_titles.index)]
 ```
 
-**Grouping by multiple columns calculating mean values**
+**Grouping by multiple columns calculating mean values**  
 ```
 # Groups ratings by 'gender' and title'
 separated_rating = ungrouped_sorted_movies.groupby(['gender','title'], as_index=False)
@@ -194,7 +196,7 @@ separated_rating = ungrouped_sorted_movies.groupby(['gender','title'], as_index=
 separated_rating = separated_rating.agg({'rating': np.mean})
 ```
 
-**Getting sorted, grouped data**
+**Getting sorted, grouped data**  
 ```
 # If you do not group the data, it will only return the 1st 3 items
 separated_rating.sort_values(['gender','rating'],ascending=False).head(3)
@@ -203,19 +205,19 @@ separated_rating.sort_values(['gender','rating'],ascending=False).head(3)
 separated_rating.sort_values(['gender','rating'],ascending=False).groupby('gender').head(3)
 ```
 
-**Pivoting tables**
+**Pivoting tables**  
 ```
 # Pivots ratings table to use values of 'title' as index and values of 'gender' as columns
 pivoted_ratings = separated_rating.pivot('title', 'gender')
 ```
 
-**Applying function to all rows of a DataFrame**
+**Applying function to all rows of a DataFrame**  
 ```
 # Applies 'F' - 'M' to each row and sorts the result
 pivoted_ratings['rating'].apply(lambda x: x['F'] - x['M'], axis=1).sort_values()
 ```
 
-**Calculating standard deviation**
+**Calculating standard deviation**  
 ```
 # Regroups movies and calculates the standard deviation of each title
 ratings_std = ungrouped_sorted_movies.groupby('title')['rating'].std()
