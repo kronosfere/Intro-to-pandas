@@ -9,6 +9,8 @@ For advanced users who wish to install only the necessary modules, these are the
 * Jupyter notebook `pip3 install jupyter`
 * Pandas >= 0.20.3 `pip3 install pandas`
 * Numpy >= 1.13.3 `pip3 install numpy`
+## What is Pandas
+[**Pandas**](https://pandas.pydata.org/) is a Python package that provides fast, expressive, data structures that makes working with relational data intuitive. It can be used along with other packages such as [Numpy](http://www.numpy.org/) and [scikit-learn](http://scikit-learn.org/stable/) to further extend the uses of the package.
 
 
 ## Setup
