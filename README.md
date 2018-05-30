@@ -1,6 +1,4 @@
 ## Beginners' introduction to Pandas - Pycon APAC 2018
-
-## Prerequisites
 # Recommended installation
 The Anaconda distribution package is one of the most popular packages for data science and contains all of the packages you will need for this workshop and for further experimentation and usage.  
 The distribution package can be downloaded here (600~mb): `https://www.anaconda.com/download/`  
@@ -27,9 +25,10 @@ import numpy as np
 ```
 (Tip: You can press `shift + enter` to execute the cell)
 
-### Let's begin
+# Let's begin
+
 ## Basic Pandas Data-structures(Series, DataFrame)
-# [Series](https://pandas.pydata.org/pandas-docs/stable/generated/pandas.Series.html)
+## [Series](https://pandas.pydata.org/pandas-docs/stable/generated/pandas.Series.html)
 A `Series` is a **one-demensional ndarray with axis labels**  
 Values within a `Series` object can be accessed by index: `a[0]`  
 You can pass in `index` to create your own index  
@@ -81,7 +80,7 @@ s3.max()
 # And more...
 ```
 
-# [DataFrame](https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html#pandas.DataFrame)
+## [DataFrame](https://pandas.pydata.org/pandas-docs/stable/generated/pandas.DataFrame.html#pandas.DataFrame)
 A `DataFrame` is a **2-dimensional table with labeled axes**.  
 Acts like a dict-like container for `Series` objects.  
 
