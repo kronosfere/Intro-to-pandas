@@ -43,7 +43,7 @@ s1 = pd.Series([0.5, 1.0, 1.5, 2.0])
 s1[0] # Returns 0.5
 
 # Array and index
-s2 = pd.Series([0.5, 1.0, 1.5, 2.0], index=['a', 'd', 'b', 'c')
+s2 = pd.Series([0.5, 1.0, 1.5, 2.0], index=['a', 'd', 'b', 'c'])
 
 s2['d'] # returns 1.0 (You can still access by numerical index: s2[1])
 
