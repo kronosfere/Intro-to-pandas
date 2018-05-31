@@ -162,7 +162,7 @@ Now that you know how to work with `DataFrame`s let's move to a bigger dataset.
 
 For this example, you will work on the given dataset of movie ratings to determine a few things:
 * What are the favorite movies of males vs females
-* What are the movies with the most discrepancy between reviews
+* What are the most controversial movies
 
 **read_csv(without proper labels)**  
 The given datasets do not come with labels. In such cases, you should determine the labels through the source if possible, or make assumptions if not.  
