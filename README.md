@@ -72,7 +72,7 @@ s3.abs() # Returns Series with all values transformed to absolute
 'e' in s3 # False
 
 # Get values in Series
-s3['a', 'c'] # Returns Series with only 'a' and 'c'
+s3[['a', 'c']] # Returns Series with only 'a' and 'c'
 
 # Other examples:
 s3.mean()
