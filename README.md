@@ -267,3 +267,15 @@ This marks the end of the workshop.
 I hope this gave you a good beginner's tour of Pandas and manipulation of `DataFrame`s to arrive at meaningful values.  
 
 Feel free to reach out to me at [pengyu@theartling.com](mailto:pengyu@theartling.com)
+
+EDIT:  
+Pandas is also able to handle reading of many more file types and from sql tables.  
+Here is an example of creating `DataFrame` from a sqlite database (database contains 'airports', 'airlines', routes'):
+```
+# Create the connection for the sqlite database
+import sqlite3
+con = sqlite3.connect('flights/flights.db')
+
+# read_sql function requires a SQL query to tell pandas table and rows to read from and the connection to the database
+df = pd.read_sql('SELECT * from airlines', con)
+```
